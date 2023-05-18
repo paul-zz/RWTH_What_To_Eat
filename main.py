@@ -116,22 +116,32 @@ class MainWindow(QMainWindow):
         self.applySettings()
         
     def onRollButtonClick(self):
-        self.button_roll.setEnabled(False)
-        # Step 2: Create a QThread object
-        self.thread = QThread()
-        # Step 3: Create a worker object
-        self.worker = Worker()
-        self.worker.window = self
-        # Step 4: Move worker to the thread
-        self.worker.moveToThread(self.thread)
-        # Step 5: Connect signals and slots
-        self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.thread.finished.connect(lambda : self.button_roll.setEnabled(True))
-        # Step 6: Start the thread
-        self.thread.start()
+        if len(self.all_option_list) > 0:
+            # Roll only if there are available dining options
+            self.button_roll.setEnabled(False)
+            # Step 2: Create a QThread object
+            self.thread = QThread()
+            # Step 3: Create a worker object
+            self.worker = Worker()
+            self.worker.window = self
+            # Step 4: Move worker to the thread
+            self.worker.moveToThread(self.thread)
+            # Step 5: Connect signals and slots
+            self.thread.started.connect(self.worker.run)
+            self.worker.finished.connect(self.thread.quit)
+            self.worker.finished.connect(self.worker.deleteLater)
+            self.thread.finished.connect(self.thread.deleteLater)
+            self.thread.finished.connect(lambda : self.button_roll.setEnabled(True))
+            # Step 6: Start the thread
+            self.thread.start()
+        else:
+            # No available dining options
+            if len(self.main_list) == 0:
+                reason = "The selected mensa may be closed today."
+            else:
+                reason = "The food offered by mensa today may not be suitable for you."
+            QMessageBox(QMessageBox.Icon.Information, "Notice", f"No dining options. {reason} You may check its official website. But you can still add your own dining options in the settings.", parent=self).exec()
+
 
     def actionSettingsTriggered(self):
         # Go to settings
