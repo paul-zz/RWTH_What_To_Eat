@@ -40,6 +40,18 @@ url_dict = {
     }
 }
 
+category_dict = {
+    "Stew" : "Tellergericht",
+    "Vegetarian" : "Vegetarisch",
+    "Classics" : "Klassiker",
+    "Wok" : "Wok",
+    "Suggestion of the day" : "Tellergericht",
+    "Vegetarian table dish" : "Tellergericht vegetarisch",
+    "Burger Classics" : "Burger Classics",
+    "Pizza Classics" : "Pizza Classics",
+    "Pizza of the Day" : "Pizza des Tages"
+}
+
 def get_mensa_foodplan(mensa_name = "Academica", lang = "English"):
     # Get food plan of today from STW
     URL = get_menu_url(mensa_name, lang)
@@ -95,3 +107,7 @@ def get_menu_url(mensa_name = "Academica", lang = "English"):
 def get_mensa_names():
     names = list(url_dict.keys())
     return names
+
+def get_category_german(category_eng : str):
+    # Get the German version of the category
+    return category_dict[category_eng]
